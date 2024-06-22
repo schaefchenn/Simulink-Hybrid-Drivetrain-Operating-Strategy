@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Mask SelfModifiable="on">
+  <Type>TractionDemand</Type>
+  <SourceCheckSum>8DCD62A9F829862FC00684299B143965</SourceCheckSum>
+  <Display IconOpaque="transparent" RunInitForIconRedraw="off">image(&apos;Icon\Audi-RS6.png&apos;)
+</Display>
+  <Description>Traction demand derived from vehicle velocity, you can adjust the values or choose from one of the presets.</Description>
+  <Initialization>matlab.system.MLSysBlockIconAndPortLabelsInfo.updateMLSysBlockIconAndPortLabels(gcbh)</Initialization>
+  <MaskParameter Name="gravitationConstant" Type="edit">
+    <Prompt>Gravitation [m/s^2]:</Prompt>
+    <Value>9.81</Value>
+  </MaskParameter>
+  <MaskParameter Name="gradient" Type="edit">
+    <Prompt>Gradient [%]:</Prompt>
+    <Value>0</Value>
+  </MaskParameter>
+  <MaskParameter Name="airDensity" Type="edit">
+    <Prompt>Air Density [kg/m^3]:</Prompt>
+    <Value>1.199</Value>
+  </MaskParameter>
+  <MaskParameter Name="CarChoice" Type="popup" Evaluate="off" Tunable="off">
+    <Prompt>Choose a Car or create a custom one:</Prompt>
+    <Value>Audi RS6</Value>
+    <Callback>% Define car-specific parameters
+carParameters.AudiRS6.mass = 1935;
+carParameters.AudiRS6.projectedSurface = 2.5;
+carParameters.AudiRS6.coefficientOfDrag = 0.32;
+carParameters.AudiRS6.lambda = 1.2;
+
+carParameters.BMWG80M3.mass = 1820;
+carParameters.BMWG80M3.projectedSurface = 2.4;
+carParameters.BMWG80M3.coefficientOfDrag = 0.34;
+carParameters.BMWG80M3.lambda = 1.1;
+
+carParameters.Hyundaii30.mass = 1450;
+carParameters.Hyundaii30.projectedSurface = 2.2;
+carParameters.Hyundaii30.coefficientOfDrag = 0.30;
+carParameters.Hyundaii30.lambda = 1.0;
+
+% Define default parameters for custom or unknown cars
+defaultParameters.mass = 1000;
+defaultParameters.projectedSurface = 2;
+defaultParameters.coefficientOfDrag = 0.31;
+defaultParameters.lambda = 1.1;
+
+% Get the current value of the CarChoice parameter
+carChoice = get_param(gcb, &apos;CarChoice&apos;);
+
+% Define the path to the icons
+iconPath = &apos;Icon/&apos;; % Adjust this path as necessary
+
+% Initialize the parameters to default values
+parameters = defaultParameters;
+
+% Set the icon and parameters based on the CarChoice parameter
+switch carChoice
+    case &apos;Audi RS6&apos;
+        iconFile = &apos;Audi-RS6.png&apos;;
+        parameters = carParameters.AudiRS6;
+    case &apos;BMW G80 M3&apos;
+        iconFile = &apos;BMW-G80-M3.png&apos;;
+        parameters = carParameters.BMWG80M3;
+    case &apos;Hyundai i30&apos;
+        iconFile = &apos;Hyundai-i30.png&apos;;
+        parameters = carParameters.Hyundaii30;
+    case &apos;Custom&apos;
+        iconFile = &apos;default-icon.png&apos;;
+        parameters = defaultParameters; % Use default parameters for custom car
+    otherwise
+        iconFile = &apos;default-icon.png&apos;;
+        parameters = defaultParameters; % Use default parameters for unknown car
+end
+
+% Set the icon display with port labels
+iconFullPath = fullfile(iconPath, iconFile);
+maskDisplay = sprintf(&apos;image(&apos;&apos;%s&apos;&apos;)\n&apos;, iconFullPath);
+set_param(gcb, &apos;MaskDisplay&apos;, maskDisplay);
+
+% Update the parameters of the TractionDemand block
+set_param(gcb, &apos;mass&apos;, num2str(parameters.mass));
+set_param(gcb, &apos;projectedSurface&apos;, num2str(parameters.projectedSurface));
+set_param(gcb, &apos;coefficientOfDrag&apos;, num2str(parameters.coefficientOfDrag));
+set_param(gcb, &apos;lambda&apos;, num2str(parameters.lambda));</Callback>
+    <TypeOptions>
+      <Option>Audi RS6</Option>
+      <Option>BMW G80 M3</Option>
+      <Option>Hyundai i30</Option>
+      <Option>Custom</Option>
+    </TypeOptions>
+  </MaskParameter>
+  <MaskParameter Name="mass" Type="edit" Tunable="off">
+    <Prompt>Mass [kg]:</Prompt>
+    <Value>1935</Value>
+  </MaskParameter>
+  <MaskParameter Name="projectedSurface" Type="edit" Tunable="off">
+    <Prompt>Projected Surface [m^2]:</Prompt>
+    <Value>2.5</Value>
+  </MaskParameter>
+  <MaskParameter Name="coefficientOfDrag" Type="edit" Tunable="off">
+    <Prompt>Coefficient of Drag:</Prompt>
+    <Value>0.32</Value>
+  </MaskParameter>
+  <MaskParameter Name="lambda" Type="edit" Tunable="off">
+    <Prompt>Lambda:</Prompt>
+    <Value>1.2</Value>
+  </MaskParameter>
+  <MaskParameter Name="SimulateUsing" Type="popup" Evaluate="off" Tunable="off">
+    <Prompt>SystemBlock:MATLABSystem:SimulateUsing</Prompt>
+    <Value>Code generation</Value>
+    <TypeOptions>
+      <Option>SystemBlock:MATLABSystem:SimulateUsingCodeGeneration</Option>
+      <Option>SystemBlock:MATLABSystem:SimulateUsingInterpretedExecution</Option>
+    </TypeOptions>
+  </MaskParameter>
+  <MaskParameter Name="dynamicRadius" Type="edit" Tunable="off">
+    <Prompt>Dynamic Wheel Radius [m]:</Prompt>
+    <Value>0.329</Value>
+  </MaskParameter>
+  <MaskParameter Name="frictionResistance" Type="edit" Tunable="off">
+    <Prompt>Friction Resistance:</Prompt>
+    <Value>0.0124</Value>
+  </MaskParameter>
+  <DialogControl Type="Group" Name="DescGroupVar">
+    <Prompt>TractionDemand</Prompt>
+    <DialogControl Type="Text" Name="DescTextVar">
+      <Prompt>%&lt;MaskDescription&gt;</Prompt>
+    </DialogControl>
+    <DialogControl Type="Hyperlink" Name="SourceCodeLink">
+      <Prompt>Source code</Prompt>
+      <Callback>edit(&apos;TractionDemand&apos;);</Callback>
+    </DialogControl>
+  </DialogControl>
+  <DialogControl Type="Group" Name="SectionGroup0_Section1">
+    <Prompt>Constants</Prompt>
+    <ControlOptions AlignPrompts="on"/>
+    <DialogControl Type="Edit" Name="gravitationConstant">
+      <Prompt>Gravitation [m/s^2]:</Prompt>
+      <ControlOptions PromptLocation="left"/>
+    </DialogControl>
+    <DialogControl Type="Edit" Name="gradient">
+      <Prompt>Gradient [%]:</Prompt>
+      <ControlOptions PromptLocation="left"/>
+    </DialogControl>
+    <DialogControl Type="Edit" Name="airDensity">
+      <Prompt>Air Density [kg/m^3]:</Prompt>
+      <ControlOptions PromptLocation="left"/>
+    </DialogControl>
+  </DialogControl>
+  <DialogControl Type="TabContainer" Name="TabsContainer">
+    <DialogControl Type="Tab" Name="SectionGroup1">
+      <Prompt>Car</Prompt>
+      <ControlOptions AlignPrompts="on"/>
+      <DialogControl Type="Group" Name="SectionGroup1_Section1">
+        <ControlOptions AlignPrompts="on"/>
+        <DialogControl Type="Popup" Name="CarChoice">
+          <Prompt>Choose a Car or create a custom one:</Prompt>
+          <ControlOptions PromptLocation="left"/>
+        </DialogControl>
+      </DialogControl>
+      <DialogControl Type="Group" Name="SectionGroup1_Section2">
+        <Prompt>Car parameters</Prompt>
+        <ControlOptions AlignPrompts="on"/>
+        <DialogControl Type="Edit" Name="mass">
+          <Prompt>Mass [kg]:</Prompt>
+          <ControlOptions PromptLocation="left"/>
+        </DialogControl>
+        <DialogControl Type="Edit" Name="projectedSurface">
+          <Prompt>Projected Surface [m^2]:</Prompt>
+          <ControlOptions PromptLocation="left"/>
+        </DialogControl>
+        <DialogControl Type="Edit" Name="coefficientOfDrag">
+          <Prompt>Coefficient of Drag:</Prompt>
+          <ControlOptions PromptLocation="left"/>
+        </DialogControl>
+        <DialogControl Type="Edit" Name="lambda">
+          <Prompt>Lambda:</Prompt>
+          <ControlOptions PromptLocation="left"/>
+        </DialogControl>
+      </DialogControl>
+      <DialogControl Type="Panel" Name="SectionGroup1_Section3">
+        <ControlOptions AlignPrompts="on"/>
+        <DialogControl Type="Popup" Name="SimulateUsing">
+          <Prompt>Simulate using:</Prompt>
+          <Tooltip>SystemBlock:MATLABSystem:SimulateUsingDescription</Tooltip>
+          <ControlOptions PromptLocation="left"/>
+        </DialogControl>
+      </DialogControl>
+    </DialogControl>
+    <DialogControl Type="Tab" Name="SectionGroup2">
+      <Prompt>Wheels</Prompt>
+      <ControlOptions AlignPrompts="on"/>
+      <DialogControl Type="Edit" Name="dynamicRadius">
+        <Prompt>Dynamic Wheel Radius [m]:</Prompt>
+        <ControlOptions PromptLocation="left"/>
+      </DialogControl>
+      <DialogControl Type="Edit" Name="frictionResistance">
+        <Prompt>Friction Resistance:</Prompt>
+        <ControlOptions PromptLocation="left"/>
+      </DialogControl>
+    </DialogControl>
+  </DialogControl>
+</Mask>
