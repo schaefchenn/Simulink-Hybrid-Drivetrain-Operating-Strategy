@@ -14,7 +14,7 @@ classdef TractionDemand < matlab.System
 
     properties (Hidden, Constant)
         %carData = readmatrix('Fahrzeugauflistung 1.xlsx');
-        CarChoiceSet = matlab.system.StringSet({'Audi RS6', 'BMW G80 M3', 'Hyundai i30', 'Custom'});
+        CarChoiceSet = matlab.system.StringSet({'Audi RS6', 'BMW G80 M3', 'Hyundai i30','Honda CRZ', 'Custom'});
     end
 
     % Traction properties
@@ -27,7 +27,7 @@ classdef TractionDemand < matlab.System
 
     methods (Access = protected)
         %% Calculation and Reset
-        function [torque, wheelSpeed] = stepImpl(obj, acceleration, velocity)
+        function [torque, wheelSpeed] = stepImpl(obj, velocity, acceleration)
 
             % Calculate the angle derived from the gradient
             alpha = atan(obj.gradient / 100);

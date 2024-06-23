@@ -14,6 +14,11 @@ carParameters.Hyundaii30.projectedSurface = 2.2;
 carParameters.Hyundaii30.coefficientOfDrag = 0.30;
 carParameters.Hyundaii30.lambda = 1.0;
 
+carParameters.HondaCRZ.mass = 1150;
+carParameters.HondaCRZ.projectedSurface = 2.03;
+carParameters.HondaCRZ.coefficientOfDrag = 0.30;
+carParameters.HondaCRZ.lambda = 1.0;
+
 % Define default parameters for custom or unknown cars
 defaultParameters.mass = 1000;
 defaultParameters.projectedSurface = 2;
@@ -40,6 +45,9 @@ switch carChoice
     case 'Hyundai i30'
         iconFile = 'Hyundai-i30.png';
         parameters = carParameters.Hyundaii30;
+    case 'Honda CRZ'
+        iconFile = 'Honda-CRZ.png';
+        parameters = carParameters.HondaCRZ;
     case 'Custom'
         iconFile = 'default-icon.png';
         parameters = defaultParameters; % Use default parameters for custom car
